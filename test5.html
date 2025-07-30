@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iPhone Style Landing Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        html {
+        scroll-behavior: smooth;
+        }
+        .fade-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.8s ease;
+        }
+        .fade-up.show {
+        opacity: 1;
+        transform: translateY(0);
+        }
+        .parallax {
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        }
+        @media (max-width: 768px) {
+        .parallax {
+            background-attachment: scroll;
+        }
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-sans">
+
+    <!-- Navbar -->
+    <header class="fixed top-0 w-full z-50 bg-black bg-opacity-80 backdrop-blur-md shadow-md">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="text-xl font-bold">Apple</div>
+        <ul class="hidden md:flex space-x-6 text-sm">
+            <li><a href="#hero" class="hover:text-gray-400">iPhone</a></li>
+            <li><a href="#features" class="hover:text-gray-400">Chip</a></li>
+            <li><a href="#camera" class="hover:text-gray-400">Camera</a></li>
+        </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="h-screen flex flex-col items-center justify-center text-center px-6 pt-24 parallax" style="background-image: url('https://www.apple.com/v/iphone-16/b/images/overview/hero/hero_endframe__ov6ewwmbhiam_large_2x.jpg');">
+        <div class="bg-black bg-opacity-50 p-4 rounded">
+            <h1 class="text-4xl md:text-6xl font-semibold mb-4 gsap-fade">iPhone 16</h1>
+            <p class="text-lg md:text-2xl gsap-fade">Titanium. So strong. So light. So Pro.</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 px-6 bg-white text-black text-center">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-up">A18 Pro chip.</h2>
+            <p class="text-base md:text-lg fade-up delay-100">A monster win for gaming. The biggest redesign in the history of Apple GPUs.</p>
+            <img src="https://www.apple.com/v/iphone-16/b/images/overview/chip/chip_a18_pro__c91azv2nzx2y_large_2x.jpg" alt="A18 Chip" class="mt-10 mx-auto rounded-xl shadow-xl max-w-full gsap-fade">
+        </div>
+    </section>
+
+    <!-- Camera Section -->
+    <section id="camera" class="py-24 px-6 text-center bg-black text-white">
+        <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 fade-up">A camera that captures your wildest imagination.</h2>
+        <p class="text-base md:text-lg fade-up delay-100">From dramatic landscapes to detailed close-ups, experience Apple’s most advanced camera system ever.</p>
+        <img src="https://www.apple.com/v/iphone-16-pro/f/images/overview/product-stories/design/ANIM/design_hero_endframe__f4saxkdyib2a_medium.jpg" alt="Camera" class="mt-10 rounded-lg max-w-full gsap-fade">
+        </div>
+    </section>
+
+    <!-- Video Background Section -->
+    <section class="relative h-screen overflow-hidden">
+        <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover">
+            <source src="https://www.apple.com//105/media/us/iphone-16-pro/2024/3616fe73-ad74-4b7f-8b93-a4c0f0b6a2d7/anim/apple-intelligence/large_2x.mp4" type="video/mp4">
+        </video>
+        <div class="relative z-10 h-full flex items-center justify-center bg-black bg-opacity-50">
+            <h2 class="text-white text-3xl md:text-5xl font-bold text-center fade-up px-4">See iPhone 15 Pro in action</h2>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-gray-900 text-gray-400 text-center">
+        <p>&copy; 2025 Apple Clone. Built for demo purposes.</p>
+    </footer>
+
+    <script>
+        // Simple scroll reveal animation
+        const options = {
+        threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            }
+        });
+        }, options);
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

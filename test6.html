@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload & Sort Images</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f4f4f4;
+    }
+    .upload-container {
+      margin-bottom: 20px;
+    }
+    #preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .thumb {
+      width: 120px;
+      height: 120px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background-color: white;
+      cursor: move;
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 14px;
+      line-height: 22px;
+      text-align: center;
+      cursor: pointer;
+    }
+    #saveOrderBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Modal */
+    #imageModal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+    #imageModal img {
+      max-width: 80%;
+      max-height: 80%;
+    }
+    #imageModal:target {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="upload-container">
+    <input type="file" id="imageInput" multiple accept="image/*">
+  </div>
+
+  <div id="preview"></div>
+
+  <button id="saveOrderBtn">Simpan Urutan</button>
+
+  <!-- Modal Preview -->
+  <div id="imageModal">
+    <img src="" id="modalImage">
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      let imageId = 0;
+
+      $('#imageInput').on('change', function (e) {
+        const files = e.target.files;
+
+        for (let i = 0; i < files.length; i++) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const imgData = e.target.result;
+            const thumb = $(`
+              <div class="thumb" data-id="${imageId++}">
+                <button class="remove-btn">&times;</button>
+                <img src="${imgData}" alt="thumb">
+              </div>
+            `);
+            $('#preview').append(thumb);
+          };
+          reader.readAsDataURL(files[i]);
+        }
+      });
+
+      // Remove image
+      $('#preview').on('click', '.remove-btn', function () {
+        $(this).closest('.thumb').remove();
+      });
+
+      // Sortable thumbnails
+      $('#preview').sortable({
+        placeholder: 'thumb-placeholder',
+        tolerance: 'pointer'
+      });
+
+      // Modal image preview
+      $('#preview').on('click', 'img', function () {
+        const src = $(this).attr('src');
+        $('#modalImage').attr('src', src);
+        $('#imageModal').fadeIn();
+      });
+
+      $('#imageModal').on('click', function () {
+        $(this).fadeOut();
+      });
+
+      // Save order button
+      $('#saveOrderBtn').on('click', function () {
+        let order = [];
+        $('#preview .thumb').each(function () {
+          const id = $(this).attr('data-id');
+          const src = $(this).find('img').attr('src');
+          order.push({ id, src });
+        });
+        console.log("Urutan gambar:", order);
+        alert("Urutan gambar dicetak ke konsol.");
+        alert(order);
+        // TODO: Kirim order ke server dengan AJAX jika diperlukan
+      });
+    });
+  </script>
+
+</body>
+</html>

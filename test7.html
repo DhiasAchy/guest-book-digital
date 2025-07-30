@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upload & Sort Images with Server Validation</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f4f4f4;
+    }
+    .upload-container {
+      margin-bottom: 20px;
+    }
+    #imageInputLabel {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #imageInput {
+      display: none;
+    }
+    #preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .thumb {
+      width: 120px;
+      height: 120px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background-color: white;
+      cursor: move;
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 14px;
+      line-height: 22px;
+      text-align: center;
+      cursor: pointer;
+    }
+    #uploadBtn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #saveOrderBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="upload-container">
+    <label id="imageInputLabel" for="imageInput">Pilih Gambar (max 3, max 1.5 MB/file)</label>
+    <input type="file" id="imageInput" multiple accept="image/*" />
+    <button id="uploadBtn">Upload Gambar</button>
+  </div>
+
+  <div id="preview"></div>
+
+  <button id="saveOrderBtn">Simpan Urutan</button>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script>
+    $(function () {
+      const maxFiles = 3;
+      const maxSizePerFile = 1.5 * 1024 * 1024; // 1.5 MB
+      let filesToUpload = [];
+
+      // Sortable thumbnails
+      $('#preview').sortable({
+        placeholder: 'thumb-placeholder',
+        tolerance: 'pointer'
+      });
+
+      // Handle file select
+      $('#imageInput').on('change', function (e) {
+        const files = e.target.files;
+
+        // Check total files count (existing + new)
+        if ((filesToUpload.length + files.length) > maxFiles) {
+          alert(`Maksimal upload ${maxFiles} gambar.`);
+          $(this).val('');
+          return;
+        }
+
+        // Validate each file size
+        for (let i = 0; i < files.length; i++) {
+          if (files[i].size > maxSizePerFile) {
+            alert(`File "${files[i].name}" melebihi ukuran 1.5 MB.`);
+            $(this).val('');
+            return;
+          }
+        }
+
+        // Add new files to array and preview
+        for (let i = 0; i < files.length; i++) {
+          filesToUpload.push(files[i]);
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const thumb = $(`
+              <div class="thumb" data-index="${filesToUpload.length - 1}">
+                <button class="remove-btn">&times;</button>
+                <img src="${e.target.result}" alt="thumb" />
+              </div>
+            `);
+            $('#preview').append(thumb);
+          };
+          reader.readAsDataURL(files[i]);
+        }
+        // Clear input so same file can be selected again if needed
+        $(this).val('');
+      });
+
+      // Remove thumbnail & file from array
+      $('#preview').on('click', '.remove-btn', function () {
+        const thumb = $(this).closest('.thumb');
+        const index = parseInt(thumb.attr('data-index'));
+
+        // Remove file from array
+        filesToUpload.splice(index, 1);
+
+        // Refresh data-index on remaining thumbs
+        $('#preview .thumb').each(function (i) {
+          $(this).attr('data-index', i);
+        });
+        thumb.remove();
+      });
+
+      // Upload button click
+      $('#uploadBtn').on('click', function () {
+        console.log('Files to upload:', filesToUpload);
+        if (filesToUpload.length === 0) {
+          alert('Tidak ada file untuk diupload.');
+          return;
+        }
+
+        // Prepare FormData
+        const formData = new FormData();
+        filesToUpload.forEach(file => formData.append('images[]', file));
+
+        $.ajax({
+          url: 'test7.php',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            let res = {};
+            try {
+              res = JSON.parse(response);
+            } catch {
+              alert('Response server tidak valid.');
+              return;
+            }
+
+            if (res.status === 'success') {
+              alert(res.message || 'Upload berhasil!');
+              // Reset after upload
+              filesToUpload = [];
+              $('#preview').empty();
+            } else {
+              alert(res.message || 'Terjadi kesalahan saat upload.');
+            }
+          },
+          error: function () {
+            alert('Gagal menghubungi server.');
+          }
+        });
+      });
+
+      // Save order button (contoh saja, sesuaikan backend)
+      $('#saveOrderBtn').on('click', function () {
+        let order = [];
+        $('#preview .thumb').each(function () {
+          order.push($(this).attr('data-index'));
+        });
+        alert('Urutan gambar: ' + order.join(', '));
+        // Kirim urutan ini ke server jika perlu
+      });
+    });
+  </script>
+</body>
+</html>

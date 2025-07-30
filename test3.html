@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Salin Teks dari Elemen</title>
+  <style>
+    .copy-btn {
+      padding: 8px 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .copy-btn:hover {
+      background-color: #218838;
+    }
+
+    .copied-msg {
+      color: green;
+      font-size: 14px;
+      display: none;
+      margin-top: 10px;
+    }
+
+    .text-to-copy {
+      padding: 10px;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      margin-bottom: 5px;
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="text-to-copy" id="copyDiv">Ini adalah teks dalam elemen <b>DIV</b> yang bisa disalin.</div>
+  <span class="text-to-copy" id="copySpan">Teks dari <i>SPAN</i> ini juga bisa disalin.</span><br>
+
+  <button class="copy-btn" onclick="copyTextFromElement('copyDiv')">Salin Teks dari DIV</button>
+  <button class="copy-btn" onclick="copyTextFromElement('copySpan')">Salin Teks dari SPAN</button>
+
+  <div class="copied-msg" id="copiedMsg">Teks berhasil disalin!</div>
+
+  <script>
+    async function copyTextFromElement(elementId) {
+      const el = document.getElementById(elementId);
+      const text = el.innerText;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        document.getElementById('copiedMsg').style.display = 'block';
+
+        setTimeout(() => {
+          document.getElementById('copiedMsg').style.display = 'none';
+        }, 1500);
+      } catch (err) {
+        alert('Gagal menyalin teks: ' + err);
+      }
+    }
+  </script>
+
+</body>
+</html>

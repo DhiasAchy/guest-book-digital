@@ -1,0 +1,5 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:/admin/
+
+Sitemap: https://graha-one.id/sitemap.xml

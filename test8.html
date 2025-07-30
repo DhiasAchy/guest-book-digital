@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Slider</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <style>
+        body {
+            background: #ccc;
+            color: #000;
+            line-height: 1.5;
+            font-family: -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-image: linear-gradient(to bottom, #6c08ca, #fff);
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #007aff;
+            color: white;
+        }
+
+        .slider-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .slide-content {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5); /* Latar belakang transparan untuk teks */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            font-size: 40px;
+            margin: 0;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Travel Slider</h1>
+    </header>
+    <div class="slider-container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="background-image: url('https://travel-slider.uiinitiative.com/images/usa.jpg');">
+                    <div class="slide-content">
+                        <h2>United States</h2>
+                        <p>8,295 properties</p>
+                    </div>
+                </div>
+                <div class="swiper-slide" style="background-image: url('path/to/image2.jpg');">
+                    <div class="slide-content">
+                        <h2>England</h2>
+                        <p>1,110 properties</p>
+                    </div>
+                </div>
+                <div class="swiper-slide" style="background-image: url('path/to/image3.jpg');">
+                    <div class="slide-content">
+                        <h2>France</h2>
+                        <p>314 properties</p>
+                    </div>
+                </div>
+                <div class="swiper-slide" style="background-image: url('path/to/image4.jpg');">
+                    <div class="slide-content">
+                        <h2>Italy</h2>
+                        <p>1,200 properties</p>
+                    </div>
+                </div>
+                <div class="swiper-slide" style="background-image: url('path/to/image5.jpg');">
+                    <div class="slide-content">
+                        <h2>Russia</h2>
+                        <p>12,231 properties</p>
+                    </div>
+                </div>
+                <div class="swiper-slide" style="background-image: url('path/to/image6.jpg');">
+                    <div class="slide-content">
+                        <h2>Egypt</h2>
+                        <p>505 properties</p>
+                    </div>
+                </div>
+                <div class="swiper-slide" style="background-image: url('path/to/image7.jpg');">
+                    <div class="slide-content">
+                        <h2>India</h2>
+                        <p>2,300 properties</p>
+                    </div>
+                </div>
+                <div class="swiper-slide" style="background-image: url('path/to/image8.jpg');">
+                    <div class="slide-content">
+                        <h2>Japan</h2>
+                        <p>1,700 properties</p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper-container', {
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+
+    </script>
+</body>
+</html>
